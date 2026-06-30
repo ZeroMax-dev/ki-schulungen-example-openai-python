@@ -34,7 +34,7 @@ The official doc is [here](https://developers.openai.com/api/docs/guides/text).
 
 ```python
 payload = {
-    "model": "gpt-4o-mini",
+    "model": "gpt-5.4-mini",
     "input": [
         # system message first, it helps set the behavior of the assistant
         {"role": "system", "content": "You are a helpful assistant."},
@@ -83,7 +83,7 @@ while True:
         )
         # docs: https://developers.openai.com/api/docs/guides/text
         response = client.responses.create(
-            model="gpt-4o-mini", input=messages
+            model="gpt-5.4-mini", input=messages
         )
         # get the reply
         reply = response.output_text

@@ -14,7 +14,7 @@ client = OpenAI(
 # We use the Responses API (client.responses.create), OpenAI's current
 # recommended interface. Docs: https://developers.openai.com/api/docs/guides/text
 response = client.responses.create(
-    model="gpt-4o-mini",
+    model="gpt-5.4-mini",
     # `input` can be a plain string or a list of role-based messages
     input=[
         # system message first, it helps set the behavior of the assistant
