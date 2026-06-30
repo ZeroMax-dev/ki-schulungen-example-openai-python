@@ -5,16 +5,18 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
-# Initialize the OpenAI client with local model endpoint
+# Initialize the OpenAI client (reads the API key from the environment)
 client = OpenAI(
-    # base_url="http://127.0.0.1:1234/v1",
-    api_key=os.getenv("OPENAI_API_KEY")  # May not be needed for local models but kept for compatibility
+    # base_url="http://127.0.0.1:1234/v1",  # uncomment to target a local model server
+    api_key=os.getenv("OPENAI_API_KEY")
 )
 
-# doc is here https://platform.openai.com/docs/guides/chat/chat-vs-completions?utm_medium=email&_hsmi=248334739&utm_content=248334739&utm_source=hs_email
-chat_completion = client.chat.completions.create(
-    model="gpt-3.5-turbo",
-    messages=[
+# We use the Responses API (client.responses.create), OpenAI's current
+# recommended interface. Docs: https://developers.openai.com/api/docs/guides/text
+response = client.responses.create(
+    model="gpt-4o-mini",
+    # `input` can be a plain string or a list of role-based messages
+    input=[
         # system message first, it helps set the behavior of the assistant
         {"role": "system", "content": "You are a helpful assistant."},
         # I am the user, and this is my prompt
@@ -23,6 +25,6 @@ chat_completion = client.chat.completions.create(
         # {"role": "assistant", "content": "Episode III."},
     ],
 )
-# let's see the reply
-print(chat_completion.choices[0].message.content)
-# As an AI language model, I cannot provide my personal opinion. However, according to critics and public reception, "The Empire Strikes Back" is often considered the best Star Wars movie.
+# let's see the reply (output_text joins all text output from the model)
+print(response.output_text)
+# e.g. "Many critics and fans consider 'The Empire Strikes Back' the best Star Wars movie."

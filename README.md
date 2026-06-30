@@ -29,13 +29,13 @@ We're ready to go!
 
 ## Make a simple request
 
-The official doc is [here](https://platform.openai.com/docs/guides/chat?utm_medium=email&_hsmi=248334739&utm_content=248334739&utm_source=hs_email). 
+The official doc is [here](https://developers.openai.com/api/docs/guides/text).
 
 
 ```python
 payload = {
-    "model": "gpt-3.5-turbo",
-    "messages": [
+    "model": "gpt-4o-mini",
+    "input": [
         # system message first, it helps set the behavior of the assistant
         {"role": "system", "content": "You are a helpful assistant."},
         # I am the user, and this is my prompt
@@ -46,7 +46,7 @@ payload = {
 }
 ```
 
-`messages` is a list of objects with key `role` and `content`. `role can be `system`, use it to set the bot behaviour, `user` is the user interacting with the bot (ourself) and `assistant` is the chatbot. Inside `content` we place our text.
+`input` is a list of objects with key `role` and `content`. `role` can be `system`, use it to set the bot behaviour, `user` is the user interacting with the bot (ourself) and `assistant` is the chatbot. Inside `content` we place our text.
 
 We need to have export `OPENAI_API_KEY` in order to let OpenAI knows who we are. Set the env variable `OPENAI_API_KEY` to the one you have created before
 
@@ -62,10 +62,14 @@ We can go one step further by creating a little interactive chat we can run in t
 
 ```python
 # cli.py
-import openai
+from openai import OpenAI
 import os
+from dotenv import load_dotenv
 
+load_dotenv()
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+# we keep the running conversation in `messages`
 messages = [
     # system message first, it helps set the behavior of the assistant
     {"role": "system", "content": "You are a helpful assistant."},
@@ -77,14 +81,14 @@ while True:
         messages.append(
             {"role": "user", "content": message},
         )
-        # doc is here https://platform.openai.com/docs/guides/chat/chat-vs-completions?utm_medium=email&_hsmi=248334739&utm_content=248334739&utm_source=hs_email
-        chat_completion = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo", messages=messages
+        # docs: https://developers.openai.com/api/docs/guides/text
+        response = client.responses.create(
+            model="gpt-4o-mini", input=messages
         )
-    # get the reply
-    reply = chat_completion.choices[0].message.content
-    print(f"🤖: {reply}")
-    messages.append({"role": "assistant", "content": reply})
+        # get the reply
+        reply = response.output_text
+        print(f"🤖: {reply}")
+        messages.append({"role": "assistant", "content": reply})
 ```
 
 Then, assuming you have the code inside `cli.py`, we can run it (remember to set the env variable `OPENAI_API_KEY`) 
