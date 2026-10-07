@@ -14,7 +14,10 @@ client = OpenAI(
 # We use the Responses API (client.responses.create), OpenAI's current
 # recommended interface. Docs: https://developers.openai.com/api/docs/guides/text
 response = client.responses.create(
-    model="gpt-5.4-mini",
+    model="gpt-6-luna",
+    # GPT-6 models reason before they answer; effort trades quality for speed/cost
+    # ("none" | "low" | "medium" (default) | "high" | ...)
+    reasoning={"effort": "medium"},
     # `input` can be a plain string or a list of role-based messages
     input=[
         # system message first, it helps set the behavior of the assistant
